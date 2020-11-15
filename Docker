@@ -1,0 +1,125 @@
+Jellyfin
+
+docker run -d \
+ --name=jellyfin \
+ --volume /home/gabriel/jellyfin/config:/config \
+ --volume /home/gabriel/jellyfin/cache:/cache \
+ --volume /home/gabriel/Documents/:/media \
+ --user 1000:1000 \
+ --net=host \
+ --device /dev/dri/renderD128:/dev/dri/renderD128 \
+ --device /dev/dri/card0:/dev/dri/card0 \
+ --restart=unless-stopped \
+ jellyfin/jellyfin
+
+
+Radarr
+
+docker run -d \
+  --name=radarr \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=America/Montevideo \
+  -e UMASK_SET=0000 \
+  -p 7878:7878 \
+  -v /home/gabriel/radarr/config:/config \
+  -v /home/gabriel/Documents/movies:/movies \
+  -v /home/gabriel/Documents/Torrents/done:/downloads \
+  --restart unless-stopped \
+  linuxserver/radarr
+
+Sonarr
+
+docker run -d \
+  --name=sonarr \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=America/Montevideo \
+  -e UMASK_SET=0000 \
+  -p 8989:8989 \
+  -v /home/gabriel/sonarr/config:/config \
+  -v /home/gabriel/Documents/series:/tv \
+  -v /home/gabriel/Documents/Torrents/done:/downloads \
+  --restart unless-stopped \
+  linuxserver/sonarr
+
+Jackett
+
+docker run -d \
+  --name=jackett \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=America/Montevideo \
+  -p 9117:9117 \
+  -v /home/gabriel/jackett/config:/config \
+  -v /home/gabriel/Downloads:/downloads \
+  --restart unless-stopped \
+  linuxserver/jackett
+
+
+Watchover
+
+docker run -d \
+    --name watchtower \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+ -e WATCHTOWER_NOTIFICATIONS=slack \
+-eWATCHTOWER_NOTIFICATION_SLACK_HOOK_URL="https://hooks.slack.com/services/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" \
+  -e WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER=Watchtower \
+  -e WATCHTOWER_NOTIFICATIONS_LEVEL=info \
+  -e WATCHTOWER_NO_STARTUP_MESSAGE=true \
+  -e WATCHTOWER_CLEANUP=true \
+  -e WATCHTOWER_NOTIFICATION_SLACK_ICON_EMOJI=:whale: \
+  -e WATCHTOWER_NOTIFICATION_SLACK_ICON_URL=https://raw.githubusercontent.com/containrrr/watchtower/master/logo.png \
+    -e TZ=America/Montevideo \
+    --restart unless-stopped \
+    containrrr/watchtower
+
+Ombi
+
+docker run -d \
+  --name=ombi \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=America/Montevideo \
+  -p 3579:3579 \
+  -v /home/gabriel/ombi:/config \
+  --restart unless-stopped \
+  linuxserver/ombi
+
+
+Bazarr
+
+docker run -d \
+  --name=bazarr \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=America/Montevideo \
+  -p 6767:6767 \
+  -v /home/gabriel/bazarr/config:/config \
+  -v /home/gabriel/Documents/movies:/movies \
+  -v /home/gabriel/Documents/series:/tv \
+  --restart unless-stopped \
+  linuxserver/bazarr
+
+Portainer
+
+docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/gabriel/portainer:/data portainer/portainer
+
+Tdarr
+
+docker run -d \
+            --name=tdarr \
+         	-v /home/gabriel/Documents/:/home/Tdarr/Media/media \
+         	-v /home/gabriel/tdarr/cache/:/temp \
+         	-v /home/gabriel/tdarr/data/:/home/Tdarr/Documents/Tdarr \
+         	-v /home/gabriel/tdarr/data/TdarrDB:/var/lib/mongodb \
+         	-p 8265:8265 \
+         	-e "TZ=America/Montevideo" \
+         	--network="bridge" \
+         	-e PUID=1000 \
+         	-e PGID=1000 \
+         	--log-opt max-size=10m \
+         	--log-opt max-file=5 \
+         	--device=/dev/dri:/dev/dri  \
+            --restart unless-stopped \
+         	haveagitgat/tdarr
